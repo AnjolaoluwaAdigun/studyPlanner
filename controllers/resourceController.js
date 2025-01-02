@@ -40,6 +40,21 @@ const uploadResource = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const getResources = async (req, res) => {
+  try {
+    // Fetch all resources from the database
+    const resources = await Resource.find(); // This will fetch all the resources
 
-module.exports = { uploadResource };
+    if (resources.length === 0) {
+      return res.status(404).json({ message: "No resources found" });
+    }
+
+    res.status(200).json(resources); // Send the resources as a JSON response
+  } catch (error) {
+    console.error("Error fetching resources:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { uploadResource,getResources };
 

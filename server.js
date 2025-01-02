@@ -4,6 +4,11 @@ const connectDB = require("./config/db");
 const multer = require("multer"); // Import multer
 const authRoutes = require("./routes/authRoutes");
 const resourceRoutes = require("./routes/resourceRoutes"); // Import resource routes
+const scheduleRoutes = require("./routes/scheduleRoutes");
+const oAuthRoutes = require("./routes/oAuthRoutes"); // Import OAuth routes
+const { google } = require("googleapis");
+const { generateAuthUrl, getTokens } = require("./utils/authUtils"); // Import from authUtils.js
+
 
 dotenv.config();
 connectDB();
@@ -31,8 +36,10 @@ const upload = multer({
 // Middleware for handling file uploads
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/resources", resourceRoutes); // Add resource routes
+app.use("/api/auth", authRoutes);           // Authentication routes
+app.use("/api/resources", resourceRoutes);  // Add resource routes
+app.use("/api/schedules", scheduleRoutes);  // Add schedule routes
+app.use("/api", oAuthRoutes);         // OAuth routes (use a different prefix like /api/oauth)
 
 // Catch-all route for undefined endpoints
 app.use((req, res) => {
@@ -45,5 +52,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
